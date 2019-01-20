@@ -1,5 +1,10 @@
 package com.dimchel.revolut.features.converter
 
+import com.dimchel.revolut.data.repositories.RatesRepository
+import com.dimchel.revolut.data.repositories.RatesRepositoryImpl
+import com.dimchel.revolut.features.converter.presentation.ConverterActivity
+import com.dimchel.revolut.features.converter.presentation.ConverterPresenterImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Subcomponent
 import javax.inject.Scope
@@ -25,5 +30,13 @@ interface ConverterComponent {
 @ConverterScope
 @Module
 abstract class ConverterModule {
+
+    @ConverterScope
+    @Binds
+    abstract fun provideConverterPresenter(converterPresenter: ConverterPresenterImpl): ConverterPresenter
+
+    @ConverterScope
+    @Binds
+    abstract fun provideRatesRepository(ratesRepository: RatesRepositoryImpl): RatesRepository
 
 }

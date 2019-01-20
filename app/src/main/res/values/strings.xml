@@ -1,3 +1,7 @@
 <resources>
+
     <string name="app_name">Revolut</string>
+
+    <string name="converter_retry">Retry</string>
+
 </resources>

@@ -1,10 +1,19 @@
 package com.dimchel.revolut.data.repositories
 
 import com.dimchel.revolut.features.converter.models.RatesModel
-import io.reactivex.Observable
+
+interface RatesListener {
+
+    fun onRatesReceive(ratesModel: RatesModel)
+    fun onFailure()
+
+}
 
 interface RatesRepository {
 
-    fun getRates(): Observable<RatesModel>
+    fun subscribeRates(tag: String, listener: RatesListener)
+    fun unsubscribe(tag: String)
+
+    fun requestRates()
 
 }

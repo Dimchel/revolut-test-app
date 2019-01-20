@@ -9,6 +9,6 @@ import com.dimchel.revolut.features.converter.models.RatesModel
 fun RatesResponseScheme.mapToRatesModel(): RatesModel {
     Log.v("123", "main: " + (Looper.getMainLooper() == Looper.myLooper()))
     return RatesModel(
-        base, data, rates
+        base, date, ratesScheme.rates
     )
 }

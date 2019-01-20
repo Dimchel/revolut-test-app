@@ -2,8 +2,8 @@ package com.dimchel.revolut.di
 
 import android.app.Application
 import android.content.Context
-import com.dimchel.revolut.common.schedulers.AppSchedulers
-import com.dimchel.revolut.common.schedulers.AppSchedulersImpl
+import com.dimchel.revolut.common.timer.TimerJob
+import com.dimchel.revolut.common.timer.TimerJobImpl
 import com.dimchel.revolut.features.converter.ConverterComponent
 import dagger.Binds
 import dagger.BindsInstance
@@ -46,8 +46,7 @@ abstract class AppModule {
     @Binds
     abstract fun provideContext(application: Application): Context
 
-    @AppScope
     @Binds
-    abstract fun provideAppSchedulers(appSchedulers: AppSchedulersImpl): AppSchedulers
+    abstract fun provideTimerJob(timerJob: TimerJobImpl): TimerJob
 
 }

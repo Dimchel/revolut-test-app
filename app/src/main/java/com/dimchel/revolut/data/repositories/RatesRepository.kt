@@ -2,6 +2,7 @@ package com.dimchel.revolut.data.repositories
 
 import com.dimchel.revolut.features.converter.models.RatesModel
 
+
 interface RatesListener {
 
     fun onRatesReceive(ratesModel: RatesModel)

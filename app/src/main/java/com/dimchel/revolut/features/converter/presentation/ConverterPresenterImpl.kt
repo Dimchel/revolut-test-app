@@ -60,6 +60,8 @@ class ConverterPresenterImpl @Inject constructor(
         viewState.updateSelectedRate(rateModel)
 
         selectedRate = rateModel.name
+
+        ratesRepository.requestRates(selectedRate)
     }
 
     override fun onInputValueChanged(inputValue: Double) {
@@ -74,12 +76,18 @@ class ConverterPresenterImpl @Inject constructor(
         viewState.setLoadingVisibility(false)
         viewState.setRatesVisible(true)
 
-        ratesModel.ratesList.add(0, RateModel(ratesModel.base, 1.0))
-        viewState.updateRates(ratesModel.ratesList)
+        viewState.updateRates(getRatesListWithBaseRate(ratesModel))
     }
 
     override fun onFailure() {
         viewState.setRatesVisible(false)
         viewState.setLoadingVisibility(true)
     }
+
+    // ===========================================================
+    // Common
+    // ===========================================================
+
+    private fun getRatesListWithBaseRate(ratesModel: RatesModel): List<RateModel> =
+        ratesModel.ratesList.apply { add(0, RateModel(ratesModel.base, 1.0)) }
 }

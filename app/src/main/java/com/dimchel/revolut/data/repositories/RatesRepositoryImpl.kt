@@ -19,18 +19,17 @@ class RatesRepositoryImpl @Inject constructor(
 
     override fun requestRates(baseCurrency: String) {
         revolutApi.fetchRates(baseCurrency).enqueue(object : Callback<RatesResponseScheme> {
-            override fun onFailure(call: Call<RatesResponseScheme>, t: Throwable) {
-                ratesListenersMap.values.forEach {
-                    it.onFailure()
-                }
-            }
-
             override fun onResponse(call: Call<RatesResponseScheme>, response: Response<RatesResponseScheme>) {
                 ratesListenersMap.values.forEach {
                     it.onRatesReceive(response.body()!!.mapToRatesModel())
                 }
             }
 
+            override fun onFailure(call: Call<RatesResponseScheme>, t: Throwable) {
+                ratesListenersMap.values.forEach {
+                    it.onFailure()
+                }
+            }
         })
     }
 

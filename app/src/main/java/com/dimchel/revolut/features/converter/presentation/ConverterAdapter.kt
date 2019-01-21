@@ -1,9 +1,6 @@
 package com.dimchel.revolut.features.converter.presentation
 
 import android.support.v7.widget.RecyclerView
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,19 +42,19 @@ class ConverterAdapter(
         holder.currencyValueEditText.text = multiplyValues(currentRateModel.value, inputValue)
 
         if (position == SELECTED_ITEM_POSITION) {
-            Log.v("123", "bind: " + holder.currencyValueEditText.text)
-            holder.currencyValueEditText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
-
-                override fun afterTextChanged(text: Editable?) {
-                    Log.v("123", "text: " + text.toString() + "input: " + inputValue + " position: " + holder.adapterPosition)
-                }
-            })
+//            holder.currencyValueEditText.addTextChangedListener(object : TextWatcher {
+//                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+//                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+//
+//                override fun afterTextChanged(text: Editable?) {
+//                    Log.v("123", "text: " + text.toString() + "input: " + inputValue + " position: " + holder.adapterPosition)
+//                }
+//            })
         } else {
             holder.currencyValueEditText.setOnFocusChangeListener { _, _ ->
                 if (holder.adapterPosition != SELECTED_ITEM_POSITION) {
                     listener.onItemSelected(currentRateModel)
+                    listener.onInputValueChanged(holder.currencyValueEditText.text.toString().toDouble())
                 }
             }
         }
@@ -65,6 +62,7 @@ class ConverterAdapter(
         holder.itemView.setOnClickListener {
             if (position != SELECTED_ITEM_POSITION) {
                 listener.onItemSelected(ratesList[position])
+                listener.onInputValueChanged(holder.currencyValueEditText.text.toString().toDouble())
             }
         }
     }

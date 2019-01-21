@@ -1,8 +1,9 @@
 package com.dimchel.revolut.features.converter.presentation
 
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.Button
 import android.widget.ProgressBar
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -11,14 +12,15 @@ import com.dimchel.revolut.R
 import com.dimchel.revolut.RevolutApp
 import com.dimchel.revolut.common.utils.visible
 import com.dimchel.revolut.features.converter.ConverterView
-import com.dimchel.revolut.features.converter.models.RatesModel
+import com.dimchel.revolut.features.converter.models.RateModel
 import javax.inject.Inject
 
 
-class ConverterActivity : MvpAppCompatActivity(), ConverterView {
+class ConverterActivity : MvpAppCompatActivity(), ConverterView, ConverterListListener {
+
+    private lateinit var converterAdapter: ConverterAdapter
 
     private lateinit var ratesRecyclerView: RecyclerView
-    private lateinit var retryButton: Button
     private lateinit var loadingProgressBar: ProgressBar
 
     @Inject
@@ -38,9 +40,13 @@ class ConverterActivity : MvpAppCompatActivity(), ConverterView {
     }
 
     private fun initViews() {
-        ratesRecyclerView = findViewById(R.id.converter_recyclerview)
-        retryButton = findViewById(R.id.converter_retry_button)
         loadingProgressBar = findViewById(R.id.converter_progressbar)
+
+        ratesRecyclerView = findViewById(R.id.converter_recyclerview)
+        ratesRecyclerView.layoutManager = LinearLayoutManager(this)
+        ratesRecyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+        ratesRecyclerView.itemAnimator = null
+        ratesRecyclerView.setHasFixedSize(true)
     }
 
     // ===========================================================
@@ -51,15 +57,36 @@ class ConverterActivity : MvpAppCompatActivity(), ConverterView {
         ratesRecyclerView.visible = isVisible
     }
 
-    override fun updateRates(ratesModel: RatesModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun initRatesList(inputValue: Double) {
+        converterAdapter = ConverterAdapter(this, inputValue)
+        ratesRecyclerView.adapter = converterAdapter
     }
 
-    override fun setRetryVisibility(isVisible: Boolean) {
-        retryButton.visible = isVisible
+    override fun updateRates(ratesList: List<RateModel>) {
+        converterAdapter.updateRates(ratesList)
+    }
+
+    override fun updateSelectedRate(rateModel: RateModel) {
+        converterAdapter.selectRate(rateModel)
+    }
+
+    override fun updateInputValue(inputValue: Double) {
+        converterAdapter.setInputValue(inputValue)
     }
 
     override fun setLoadingVisibility(isVisible: Boolean) {
         loadingProgressBar.visible = isVisible
+    }
+
+    // ===========================================================
+    // ConverterListListener
+    // ===========================================================
+
+    override fun onItemSelected(rateModel: RateModel) {
+        presenter.onItemSelected(rateModel)
+    }
+
+    override fun onInputValueChanged(inputValue: Double) {
+        presenter.onInputValueChanged(inputValue)
     }
 }

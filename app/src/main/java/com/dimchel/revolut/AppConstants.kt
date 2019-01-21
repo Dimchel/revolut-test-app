@@ -6,7 +6,7 @@ class AppConstants {
 
         const val API_URL = "https://revolut.duckdns.org"
 
-        const val REQUEST_QUOTES_URL = "latest?base=EUR"
+        const val REQUEST_QUOTES_URL = "latest"
     }
 
 }

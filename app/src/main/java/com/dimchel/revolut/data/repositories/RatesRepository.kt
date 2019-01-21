@@ -14,6 +14,6 @@ interface RatesRepository {
     fun subscribeRates(tag: String, listener: RatesListener)
     fun unsubscribe(tag: String)
 
-    fun requestRates()
+    fun requestRates(baseCurrency: String)
 
 }

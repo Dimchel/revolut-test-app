@@ -15,11 +15,4 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"/>
 
-	<Button
-		android:id="@+id/converter_retry_button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		android:text="@string/converter_retry"/>
-
 </FrameLayout>

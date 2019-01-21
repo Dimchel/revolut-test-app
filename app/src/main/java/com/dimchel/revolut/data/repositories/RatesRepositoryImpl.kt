@@ -17,8 +17,8 @@ class RatesRepositoryImpl @Inject constructor(
 
     private val ratesListenersMap = mutableMapOf<String, RatesListener>()
 
-    override fun requestRates() {
-        revolutApi.fetchRates().enqueue(object : Callback<RatesResponseScheme> {
+    override fun requestRates(baseCurrency: String) {
+        revolutApi.fetchRates(baseCurrency).enqueue(object : Callback<RatesResponseScheme> {
             override fun onFailure(call: Call<RatesResponseScheme>, t: Throwable) {
                 ratesListenersMap.values.forEach {
                     it.onFailure()
@@ -41,5 +41,4 @@ class RatesRepositoryImpl @Inject constructor(
     override fun unsubscribe(tag: String) {
         ratesListenersMap.remove(tag)
     }
-
 }

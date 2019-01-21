@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import com.dimchel.revolut.features.converter.models.RateModel
 import java.math.BigDecimal
@@ -80,12 +81,10 @@ class ConverterAdapter(
 class ConverterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
     private val currencyNameTextView: TextView = itemView.findViewById(com.dimchel.revolut.R.id.item_rate_currency_textview)
-    private val currencyValueEditText: TextView = itemView.findViewById(com.dimchel.revolut.R.id.item_rate_value_edittext)
+    private val currencyValueEditText: EditText = itemView.findViewById(com.dimchel.revolut.R.id.item_rate_value_edittext)
 
     private var inputValue: Double? = null
     private var listener: ConverterListListener? = null
-
-    private var selectionPosition: Int? = null
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
@@ -107,7 +106,7 @@ class ConverterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         currencyValueEditText.removeTextChangedListener(textWatcher)
 
         currencyNameTextView.text = currentRateModel.name
-        currencyValueEditText.text = multiplyValues(currentRateModel.value, inputValue)
+        currencyValueEditText.setText(multiplyValues(currentRateModel.value, inputValue))
 
         if (adapterPosition == SELECTED_ITEM_POSITION) {
             currencyValueEditText.addTextChangedListener(textWatcher)

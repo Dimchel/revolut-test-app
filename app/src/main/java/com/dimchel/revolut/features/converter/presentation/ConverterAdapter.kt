@@ -13,8 +13,6 @@ import java.math.BigDecimal
 import java.util.*
 
 
-
-
 interface ConverterListListener {
 
     fun onItemSelected(rateModel: RateModel)
@@ -22,12 +20,13 @@ interface ConverterListListener {
 
 }
 
-private const val SELECTED_ITEM_POSITION = 0
+private const val DEFAULT_INPUT_VALUE = 100.0
 
 class ConverterAdapter(
-    private val listener: ConverterListListener,
-    private var inputValue: Double
+    private val listener: ConverterListListener
 ) : RecyclerView.Adapter<ConverterViewHolder>() {
+
+    private var inputValue: Double = DEFAULT_INPUT_VALUE
 
     private var ratesList: MutableList<RateModel> = arrayListOf()
 
@@ -53,9 +52,11 @@ class ConverterAdapter(
                 return@forEach
 
             } else {
-                ratesList[rateIndexToUpdate] = newRate
+                if (rateIndexToUpdate != 0) {
+                    ratesList[rateIndexToUpdate] = newRate
 
-                notifyItemChanged(rateIndexToUpdate)
+                    notifyItemChanged(rateIndexToUpdate)
+                }
             }
         }
     }
@@ -63,10 +64,10 @@ class ConverterAdapter(
     fun selectRate(rateModel: RateModel) {
         val selectedIndex = ratesList.indexOfFirst { it.name == rateModel.name }
 
-        if (selectedIndex != SELECTED_ITEM_POSITION) {
-            Collections.swap(ratesList, SELECTED_ITEM_POSITION, selectedIndex)
+        if (selectedIndex != 0) {
+            Collections.swap(ratesList, 0, selectedIndex)
 
-            notifyItemChanged(SELECTED_ITEM_POSITION)
+            notifyItemChanged(0)
             notifyItemChanged(selectedIndex)
         }
     }
@@ -74,7 +75,7 @@ class ConverterAdapter(
     fun setInputValue(newInputValue: Double) {
         inputValue = newInputValue
 
-        notifyItemRangeChanged(0, itemCount - 1)
+        notifyItemRangeChanged(0 + 1, itemCount - 1)
     }
 }
 
@@ -91,8 +92,10 @@ class ConverterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
 
         override fun afterTextChanged(text: Editable?) {
-            if (adapterPosition == SELECTED_ITEM_POSITION) {
-                if (inputValue != text.toString().toDouble()) {
+            if (adapterPosition == 0) {
+                if (text.toString().isEmpty()) {
+                    listener!!.onInputValueChanged(0.0)
+                } else {
                     listener!!.onInputValueChanged(text.toString().toDouble())
                 }
             }
@@ -106,14 +109,21 @@ class ConverterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         currencyValueEditText.removeTextChangedListener(textWatcher)
 
         currencyNameTextView.text = currentRateModel.name
-        currencyValueEditText.setText(multiplyValues(currentRateModel.value, inputValue))
 
-        if (adapterPosition == SELECTED_ITEM_POSITION) {
+        if (adapterPosition == 0) {
+            currencyValueEditText.setText(inputValue.toString())
+        } else {
+            currencyValueEditText.setText(multiplyValues(currentRateModel.value, inputValue))
+        }
+
+        if (adapterPosition == 0) {
             currencyValueEditText.addTextChangedListener(textWatcher)
+            currencyValueEditText.setSelection(currencyValueEditText.text.length)
+            currencyValueEditText.requestFocus()
 
         } else {
-            currencyValueEditText.setOnFocusChangeListener { _, _ ->
-                if (adapterPosition != SELECTED_ITEM_POSITION) {
+            currencyValueEditText.setOnFocusChangeListener { _, isFocused ->
+                if (adapterPosition != 0 && isFocused) {
                     listener.onItemSelected(currentRateModel)
                     listener.onInputValueChanged(currencyValueEditText.text.toString().toDouble())
                 }
@@ -121,7 +131,7 @@ class ConverterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         }
 
         itemView.setOnClickListener {
-            if (adapterPosition != SELECTED_ITEM_POSITION) {
+            if (adapterPosition != 0) {
                 listener.onItemSelected(currentRateModel)
                 listener.onInputValueChanged(currencyValueEditText.text.toString().toDouble())
             }

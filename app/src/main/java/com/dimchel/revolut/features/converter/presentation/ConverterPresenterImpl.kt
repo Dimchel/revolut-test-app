@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 private const val TAG_LISTENER = "ConverterPresenterImpl.TAG_LISTENER"
 private const val DEFAULT_SELECTED_RATE = "USD"
-private const val DEFAULT_INPUT_VALUE = 100.0
 
 @ConverterScope
 @InjectViewState
@@ -31,8 +30,6 @@ class ConverterPresenterImpl @Inject constructor(
 
         viewState.setRatesVisible(false)
         viewState.setLoadingVisibility(true)
-
-        viewState.initRatesList(DEFAULT_INPUT_VALUE)
     }
 
     override fun attachView(view: ConverterView?) {

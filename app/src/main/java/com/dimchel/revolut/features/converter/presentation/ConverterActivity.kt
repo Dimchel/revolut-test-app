@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class ConverterActivity : MvpAppCompatActivity(), ConverterView, ConverterListListener {
 
-    private lateinit var converterAdapter: ConverterAdapter
+    private val converterAdapter: ConverterAdapter = ConverterAdapter(this)
 
     private lateinit var ratesRecyclerView: RecyclerView
     private lateinit var loadingProgressBar: ProgressBar
@@ -47,6 +47,7 @@ class ConverterActivity : MvpAppCompatActivity(), ConverterView, ConverterListLi
         ratesRecyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         ratesRecyclerView.itemAnimator = null
         ratesRecyclerView.setHasFixedSize(true)
+        ratesRecyclerView.adapter = converterAdapter
     }
 
     // ===========================================================
@@ -55,11 +56,6 @@ class ConverterActivity : MvpAppCompatActivity(), ConverterView, ConverterListLi
 
     override fun setRatesVisible(isVisible: Boolean) {
         ratesRecyclerView.visible = isVisible
-    }
-
-    override fun initRatesList(inputValue: Double) {
-        converterAdapter = ConverterAdapter(this, inputValue)
-        ratesRecyclerView.adapter = converterAdapter
     }
 
     override fun updateRates(ratesList: List<RateModel>) {

@@ -37,13 +37,14 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    // Support
     implementation "com.android.support:appcompat-v7:${support_libs_ver}"
     implementation "com.android.support:recyclerview-v7:${support_libs_ver}"
 
     // Tests
-    testImplementation 'junit:junit:4.12'
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.3.2"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
 
     // Dagger
     implementation "com.google.dagger:dagger:$dagger_ver"

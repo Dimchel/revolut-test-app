@@ -23,7 +23,7 @@ class DiManager(private val application: Application) {
         return appComponent as AppComponent
     }
 
-    public fun getConverterComponent(): ConverterComponent {
+    fun getConverterComponent(): ConverterComponent {
         if (converterComponent == null) {
             converterComponent = getAppComponent().getConverterComponent()
         }
@@ -31,7 +31,7 @@ class DiManager(private val application: Application) {
         return converterComponent as ConverterComponent
     }
 
-    public fun releaseConverterComponent() {
+    fun releaseConverterComponent() {
         converterComponent = null
     }
 

@@ -5,9 +5,12 @@ import com.dimchel.revolut.data.repositories.RatesRepository
 import com.dimchel.revolut.features.converter.ConverterView
 import com.dimchel.revolut.features.converter.`ConverterView$$State`
 import com.dimchel.revolut.features.converter.models.RateModel
+import com.dimchel.revolut.features.converter.models.RatesModel
 import com.dimchel.revolut.features.converter.presentation.ConverterPresenterImpl
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.verify
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -72,7 +75,28 @@ class ConverterTest {
         verify(viewState).updateInputValue(inputValue)
     }
 
-    // TODO: onRatesReceive
+    @Test
+    fun `Should initialize loading state and update rate list`() {
+        val baseRate = "USD"
+        val baseRateValue = 1.0
+        val inputRatesList = mutableListOf<RateModel>().apply {
+            add(RateModel("RUB", 42.3))
+            add(RateModel("EUR", 13.5))
+            add(RateModel("CHF", 52.8))
+        }
+
+        converterPresenter.onRatesReceive(RatesModel(baseRate, "23.01.19", inputRatesList))
+
+        verify(viewState).setLoadingVisibility(false)
+        verify(viewState).setRatesVisible(true)
+
+        val captor = argumentCaptor<List<RateModel>>()
+
+        verify(viewState).updateRates(captor.capture())
+
+        assertEquals(captor.firstValue[0].name, baseRate)
+        assertEquals(captor.firstValue[0].value, baseRateValue)
+    }
 
     @Test
     fun `Should initialize loading state after network error`() {
@@ -81,5 +105,4 @@ class ConverterTest {
         verify(viewState).setRatesVisible(false)
         verify(viewState).setLoadingVisibility(true)
     }
-
 }
